@@ -1,21 +1,26 @@
 <?php
 
 require_once ('connect.php');
+
+	$id = $_GET['id'];
+	$selSql = "SELECT * FROM `produit` WHERE id=$id";
+	$res = mysqli_query($con, $selSql);
+	$r = mysqli_fetch_assoc($res);
+
 	if (isset($_POST) & !empty($_POST)) {
 		$image = ($_POST['image']);
 		$category = ($_POST['category']);
-        $stock = $_POST['stock'];
-        $name = $_POST['name'];
-		$prix = ($_POST['prix']);
-		
-        
-       
-		$CreateSql = "INSERT INTO `produit` (image, 	category, stock, name, prix)  VALUES('$image', '$category', '$stock', '$name', '$prix') ";
-		$res = mysqli_query($con, $CreateSql) or die(mysqli_error($con));
+		$stock = ($_POST['stock']);
+		$name = $_POST['name'];
+		$prix = $_POST['prix'];
+
+		$UpdateSql = "UPDATE `produit` SET image='$image',	category='$category', stock='$stock', name='$name', prix='$prix'  WHERE id=$id ";
+
+		$res = mysqli_query($con, $UpdateSql);
 		if ($res) {
-			$message = "insertion reussi avec succès";
+			header("location: view.php");
 		}else{
-			$erreur = "erreur d'insertion a la base";
+			$erreur = "la mise à jour a échoué.";
 		}
 	}
 
@@ -33,18 +38,14 @@ require_once ('connect.php');
 </head>
 <body>
 	
+
 	<div class="container">
 		<div class="row pt-4">
-			<?php if (isset($message)) { ?>
-				<div class="alert alert-success" role="alert">
-					<?php echo $message; ?>
-				</div> <?php } ?>
-
 				<?php if (isset($erreur)) { ?>
 				<div class="alert alert-danger" role="alert">
 					<?php echo $erreur; ?>
 				</div> <?php } ?>
-<form action="" method="POST" class="form-horizontal col-md-6 pt-4" enctype="multipart/form-data">
+                <form action="" method="POST" class="form-horizontal col-md-6 pt-4" enctype="multipart/form-data">
     <h2>Crud produit</h2>
 
     <div class="form-group">
